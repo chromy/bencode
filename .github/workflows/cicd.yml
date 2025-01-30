@@ -1,0 +1,27 @@
+name: Continuous integration
+on: [push]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+      - uses: actions/setup-node@v4
+        name: Install node
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - run: ./tools/build
+        name: Build
+      - run: ./tools/test
+        name: Test
+      - run: ./tools/check
+        name: Check

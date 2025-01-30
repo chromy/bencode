@@ -4,10 +4,11 @@
   "description": "",
   "main": "dist/src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./tools/build",
+    "test": "pnpm exec tsc && node dist/all_tests.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Hector Dearman <hector.dearman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/ospec": "^4.2.0",

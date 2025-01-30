@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ROOT="$( dirname $( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd ) )"
+
+set -e
+
+node $ROOT/dist/all_tests.js

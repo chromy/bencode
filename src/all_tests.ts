@@ -1,5 +1,5 @@
 import o from "ospec";
-import {BencodeError, decode, encode} from "../src/index";
+import {BencodeError, decode, encode} from "./index";
 
 function deepEquals(a: unknown, b: unknown) {
   if (a instanceof Uint8Array && b instanceof Uint8Array) {
