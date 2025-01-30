@@ -1,5 +1,5 @@
 import o from "ospec";
-import {BencodeError, decode, encode} from "./index";
+import { BencodeError, decode, encode } from "./index";
 
 function deepEquals(a: unknown, b: unknown) {
   if (a instanceof Uint8Array && b instanceof Uint8Array) {
@@ -12,7 +12,7 @@ function deepEquals(a: unknown, b: unknown) {
         };
       }
 
-      for (let i = 0; i<actual.byteLength; ++i) {
+      for (let i = 0; i < actual.byteLength; ++i) {
         if (actual[i] !== expected[i]) {
           return {
             pass: false,
@@ -77,7 +77,7 @@ o.spec("numbers", () => {
   encodeFails(Infinity);
   encodeFails(-Infinity);
   encodeFails(0.2);
-  encodeFails(2**60);
+  encodeFails(2 ** 60);
 });
 
 o.spec("arrays", () => {
@@ -86,7 +86,7 @@ o.spec("arrays", () => {
   roundTrip([1]);
   roundTrip([[1]], "[[1]]");
   roundTrip([0, [1, []]]);
-  roundTrip([[],[],[]]);
+  roundTrip([[], [], []]);
 
   coerces([-1, false, true, 2, 3], [-1, 0, 1, 2, 3]);
   coerces([true, true, 2, 3], [1, 1, 2, 3]);
@@ -111,21 +111,25 @@ o.spec("booleans", () => {
 
 o.spec("dict", () => {
   roundTrip({});
-  roundTrip({a: 1});
-  roundTrip({a: 1, b: 2});
-  roundTrip({a: [42], b: 2});
+  roundTrip({ a: 1 });
+  roundTrip({ a: 1, b: 2 });
+  roundTrip({ a: [42], b: 2 });
 
   o(`keys should be encoded in a consistent order`, () => {
-    const a = {foo: 1, bar: 2};
-    const b = {bar: 2, foo: 1};
+    const a = { foo: 1, bar: 2 };
+    const b = { bar: 2, foo: 1 };
     deepEquals(encode(a), encode(b));
   });
 
   o(`keys should be encoded in lexicographic order`, () => {
-    const a = {c: 1, a: 1, b: 1};
-    deepEquals(encode(a), Uint8Array.from([
-      100,49,58,97,105,49,101,49,58,98,105,49,101,49,58,99,105,49,101,101
-    ]));
+    const a = { c: 1, a: 1, b: 1 };
+    deepEquals(
+      encode(a),
+      Uint8Array.from([
+        100, 49, 58, 97, 105, 49, 101, 49, 58, 98, 105, 49, 101, 49, 58, 99,
+        105, 49, 101, 101,
+      ])
+    );
   });
 });
 
@@ -148,4 +152,3 @@ o.spec("bad messages", () => {
 });
 
 o.run();
-

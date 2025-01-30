@@ -13,8 +13,7 @@ const dictSentinal = Symbol("dictSentinal");
 let textEncoder: TextEncoder;
 let textDecoder: TextDecoder;
 
-export class BencodeError extends Error {
-}
+export class BencodeError extends Error {}
 
 function getTextEncoder() {
   if (textEncoder) {
@@ -50,12 +49,12 @@ function safeEncodedSize(input: unknown): [number, Err] {
   const stack: unknown[] = [input];
   while (stack.length > 0) {
     const top = stack.pop();
-    if (typeof top === 'number') {
+    if (typeof top === "number") {
       if (isNaN(top)) {
-        return [0, {message: `Can not encode NaN into bencode`}];
+        return [0, { message: `Can not encode NaN into bencode` }];
       }
       if (!Number.isSafeInteger(top)) {
-        return [0, {message: `Can not encode ${top} into bencode`}];
+        return [0, { message: `Can not encode ${top} into bencode` }];
       }
       // i
       size += 1;
@@ -87,12 +86,11 @@ function safeEncodedSize(input: unknown): [number, Err] {
     } else if (typeof top === "string") {
       stack.push(getTextEncoder().encode(top));
     } else {
-      return [size, {message: `Can not encode ${top} into bencode`}];
+      return [size, { message: `Can not encode ${top} into bencode` }];
     }
   }
   return [size, undefined];
 }
-
 
 export function safeEncode(input: unknown): [Uint8Array, Err] {
   const [size, sizeErr] = safeEncodedSize(input);
@@ -107,7 +105,7 @@ export function safeEncode(input: unknown): [Uint8Array, Err] {
 
   while (stack.length > 0) {
     const top = stack.pop();
-    if (typeof top === 'number') {
+    if (typeof top === "number") {
       buffer[i++] = integer;
       if (top < 0) {
         buffer[i++] = minus;
@@ -115,7 +113,7 @@ export function safeEncode(input: unknown): [Uint8Array, Err] {
       let n = Math.abs(top);
       let digits = countDigits(n);
       for (let j = digits; j > 0; --j) {
-        buffer[i+j-1] = (n % 10) + zero;
+        buffer[i + j - 1] = (n % 10) + zero;
         n /= 10;
       }
       i += digits;
@@ -130,13 +128,13 @@ export function safeEncode(input: unknown): [Uint8Array, Err] {
       let n = top.byteLength;
       let digits = countDigits(n);
       for (let j = digits; j > 0; --j) {
-        buffer[i+j-1] = (n % 10) + zero;
+        buffer[i + j - 1] = (n % 10) + zero;
         n /= 10;
       }
       i += digits;
 
       buffer[i++] = colon;
-      for (let j = 0; j<top.byteLength; ++j) {
+      for (let j = 0; j < top.byteLength; ++j) {
         buffer[i++] = top[j];
       }
     } else if (top === terminatorSentinal) {
@@ -154,13 +152,15 @@ export function safeEncode(input: unknown): [Uint8Array, Err] {
         stack.push(value);
         stack.push(key);
       }
-
     } else if (typeof top === "boolean") {
       stack.push(top ? 1 : 0);
     } else if (typeof top === "string") {
       stack.push(getTextEncoder().encode(top));
     } else {
-      return [new Uint8Array(), {message: `Can not encode ${top} into bencode`}];
+      return [
+        new Uint8Array(),
+        { message: `Can not encode ${top} into bencode` },
+      ];
     }
   }
 
@@ -249,7 +249,7 @@ export function safeDecode(buffer: Uint8Array): [unknown, Err] {
         }
 
         if (i + n <= end) {
-          stack.push(buffer.subarray(i, i+n));
+          stack.push(buffer.subarray(i, i + n));
           i += n;
         }
       }
@@ -257,7 +257,10 @@ export function safeDecode(buffer: Uint8Array): [unknown, Err] {
   }
 
   if (stack.length !== 1) {
-    return [{}, { message: `Can't decode bencode, must have exactly one root value` }];
+    return [
+      {},
+      { message: `Can't decode bencode, must have exactly one root value` },
+    ];
   }
 
   return [stack[0], undefined];
