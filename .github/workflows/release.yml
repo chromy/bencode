@@ -8,8 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: Checkout
-        with:
-          submodules: true
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
